@@ -1,56 +1,25 @@
-package org.example;
-
+package org.internal;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
 
+
 final class OctreeExample {
 
     public static final Random RANDOM = new Random(System.currentTimeMillis());
 
-    public static void main(final String[] args) {
-        final Octree<String> first = Octree.createOctree(256, OctCoordinate::toString);
-        // measure `first`
-        System.out.println("size of 'first' = " + MemoryMeasurer.measure(first));
+        public static void main(final String[] args) throws Exception {
+        final ReferencesMeasurer measurer = new ReferencesMeasurer();
+
+        final Octree<String> first = Octree.createOctree(2, OctCoordinate::toString);
+
+        System.out.println("size of 'first' = " + measurer.measure(first));
 
         first.hashCode();
-        // measure `first` again
-        System.out.println("size of 'first' after .hashCode() call = " + MemoryMeasurer.measure(first));
 
-        final Octree<String> second = Octree.createOctree(256, OctCoordinate::toString);
-        second.hashCode();
-        // measure `second`
-        System.out.println("size of 'second' after .hashCode() call = " + MemoryMeasurer.measure(second));
-
-        final Octree<long[][][]> third = Octree.createOctree(256, octCoordinate -> {
-            final long[][][] longs = new long[][][]{
-                    {
-                            {octCoordinate.x, octCoordinate.y, octCoordinate.z},
-                            {octCoordinate.x, octCoordinate.z, octCoordinate.y},
-                    },
-                    {
-                            {octCoordinate.y, octCoordinate.x, octCoordinate.z},
-                            {octCoordinate.y, octCoordinate.z, octCoordinate.x},
-                    },
-                    {
-                            {octCoordinate.z, octCoordinate.x, octCoordinate.y},
-                            {octCoordinate.z, octCoordinate.y, octCoordinate.x},
-                    },
-            };
-            return longs;
-        });
-        // measure `third`
-        System.out.println("size of 'third' = " + MemoryMeasurer.measure(third));
-
-        final Octree<String> penultimate = Octree.createOctree(1024, octCoordinate -> null);
-        // measure `penultimate`
-        System.out.println("size of 'penultimate' = " + MemoryMeasurer.measure(penultimate));
-
-        final Octree<String> ultimate = Octree.createOctree(1024 * 1024, octCoordinate -> null);
-        // measure `ultimate`
-        System.out.println("size of 'ultimate' = " + MemoryMeasurer.measure(ultimate));
+        System.out.println("size of 'first' after .hashCode() call = " + measurer.measure(first));
     }
 
     public enum OctPosition {
