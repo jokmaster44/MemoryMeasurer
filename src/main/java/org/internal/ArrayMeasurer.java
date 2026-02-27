@@ -16,8 +16,7 @@ public class ArrayMeasurer {
     /**
      * Estimates the memory contribution of the given array.
      *
-     * If the array contains primitives, the result is based on
-     * primitive element size multiplied by array length.
+     * If the array contains primitives, the result is based on primitive element size multiplied by array length.
      *
      * If the array contains object references, each reference slot
      * is counted and non-null elements are measured recursively.
