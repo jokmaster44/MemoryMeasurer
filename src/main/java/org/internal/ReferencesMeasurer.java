@@ -7,16 +7,16 @@ import java.util.IdentityHashMap;
 
 /**
  * Entry point for measuring the memory footprint of an object graph.
- * <p>
+ *
  * Calculates the shallow size of an object and recursively measures
  * all non-static reference fields. Arrays are delegated to ArrayMeasurer.
- * <p>
+ *
  * Uses IdentityHashMap to avoid double-counting and infinite recursion
  * in cyclic object graphs.
  */
 public class ReferencesMeasurer {
 
-    private final PrimitivesObjectsMemoryMeasure simple = new PrimitivesObjectsMemoryMeasure();
+    private final SimpleObjectsMeasurer simple = new SimpleObjectsMeasurer();
     private final ArrayMeasurer arrayMeasurer = new ArrayMeasurer();
 
     /**
