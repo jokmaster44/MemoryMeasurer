@@ -1,4 +1,5 @@
-import org.internal.ReferencesMeasurer;
+import org.MemoryMeasure.MemoryMeasurer;
+import org.MemoryMeasure.ReferencesMemory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,12 +21,11 @@ public class TestMemoryReferences {
     void testMemory_nullObject_returnZero() throws Exception {
 
         //Arrange
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
         Object obj = null;
         long expected = 0;
 
         //Act
-        long actual = measurer.measure(obj);
+        long actual = MemoryMeasurer.measure(obj);
 
         //Assert
         assertEquals(expected, actual,
@@ -54,13 +54,12 @@ public class TestMemoryReferences {
             Child child;
         }
 
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
         Parent obj = new Parent();
         obj.child = new Child();
         long expected = 8 + 8;
 
         //Act
-        long actual = measurer.measure(obj);
+        long actual = MemoryMeasurer.measure(obj);
 
         //Assert
         assertEquals(expected, actual,
@@ -84,12 +83,11 @@ public class TestMemoryReferences {
         class Empty {
         }
 
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
         Empty obj = new Empty();
         long expected = 0L;
 
         // Act
-        long actual = measurer.measure(obj);
+        long actual = MemoryMeasurer.measure(obj);
 
         // Assert
         assertEquals(expected, actual,
@@ -115,12 +113,13 @@ public class TestMemoryReferences {
             Node next;
         }
 
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
+        ReferencesMemory measurer = new ReferencesMemory();
         Node a = new Node();
         Node b = new Node();
         a.next = b;
         b.next = a;
         long expected = 16;
+
         //Act
         long actual = measurer.measure(a);
 
@@ -151,7 +150,7 @@ public class TestMemoryReferences {
             A a2;
         }
 
-        ReferencesMeasurer measure = new ReferencesMeasurer();
+        ReferencesMemory measure = new ReferencesMemory();
         A shared = new A();
         Holder holder = new Holder();
         holder.a1 = shared;

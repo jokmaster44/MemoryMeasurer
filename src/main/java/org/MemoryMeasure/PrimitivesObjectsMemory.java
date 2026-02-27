@@ -1,4 +1,4 @@
-package org.internal;
+package org.MemoryMeasure;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,14 +12,14 @@ import java.lang.reflect.Modifier;
  * - Reference fields are counted as reference slots (assumed 8 bytes).
  * - Traverses the entire class hierarchy to include fields declared in all superclasses.
  */
-public class PrimitivesObjectsMemoryMeasure {
+public class PrimitivesObjectsMemory {
 
     /**
      * Estimates the shallow size of the given object instance.
      *
      * @param obj object to measure
      */
-    public long measure(Object obj) {
+    static public long measure(Object obj) {
         if (obj == null) return 0;
         long sum = 0;
 
@@ -35,7 +35,7 @@ public class PrimitivesObjectsMemoryMeasure {
                 if (type.isPrimitive()) {
                     sum += PrimitivesSizes.of(type);
                 } else {
-                    sum += 8;
+                    throw new IllegalArgumentException("Reference Fields are not supported in PrimitivesObjectsMemory");
                 }
             }
             clazz = clazz.getSuperclass();

@@ -1,4 +1,4 @@
-package org.internal;
+package org.MemoryMeasure;
 
 public final class PrimitivesSizes {
 

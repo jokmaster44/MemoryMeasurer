@@ -1,7 +1,8 @@
-import org.internal.PrimitivesObjectsMemoryMeasure;
+import org.MemoryMeasure.PrimitivesObjectsMemory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class TestMemoryPrimitivesObjects {
@@ -20,7 +21,7 @@ public class TestMemoryPrimitivesObjects {
     void testMemory_nullObject_returnZero() {
 
         //Arrange
-        PrimitivesObjectsMemoryMeasure measurer = new PrimitivesObjectsMemoryMeasure();
+        PrimitivesObjectsMemory measurer = new PrimitivesObjectsMemory();
         Object obj = null;
         long expected = 0;
 
@@ -47,7 +48,7 @@ public class TestMemoryPrimitivesObjects {
         //Arrange
         class A {
         }
-        PrimitivesObjectsMemoryMeasure measure = new PrimitivesObjectsMemoryMeasure();
+        PrimitivesObjectsMemory measure = new PrimitivesObjectsMemory();
         A a = new A();
         long expected = 0;
 
@@ -76,19 +77,14 @@ public class TestMemoryPrimitivesObjects {
             int a;
             int b;
             long c;
-            String g;
+            String g; // reference -> should cause exception
             char d;
         }
 
-        PrimitivesObjectsMemoryMeasure measurer = new PrimitivesObjectsMemoryMeasure();
-        Primitive a = new Primitive();
-        long expected = 26L;
-
-        //Act
-        long actual = measurer.measure(a);
-
-        //Assert
-        assertEquals(expected, actual, " Should sum primitive field sizes using PrimitivesSizes");
+        //Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> PrimitivesObjectsMemory.measure(new Primitive()),
+                "PrimitivesObjectsMemory should throw when object contains reference fields");
     }
 
     /**
@@ -102,23 +98,18 @@ public class TestMemoryPrimitivesObjects {
      * - No deep traversal is performed in shallow measurement.
      */
     @Test
-    void measure_objectWithReferences_countsReferenceSlots() {
+    void testMeasure_objectWithReferences_countsReferenceSlots() {
 
-        // Arrange
+        //Arrange
         class RefHolder {
             Object o;
             String s;
         }
 
-        PrimitivesObjectsMemoryMeasure measurer = new PrimitivesObjectsMemoryMeasure();
-        long expected = 8L + 8L;
-
-        // Act
-        long actual = measurer.measure(new RefHolder());
-
-        // Assert
-        assertEquals(expected, actual,
-                "Each reference field should count as one slot (8 bytes)");
+        //Act + Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> PrimitivesObjectsMemory.measure(new RefHolder()),
+                "PrimitivesObjectsMemory should throw when object contains reference fields");
     }
 
     /**
@@ -132,7 +123,7 @@ public class TestMemoryPrimitivesObjects {
      * - Only non-static instance fields are counted.
      */
     @Test
-    void measure_ignoresStaticFields() {
+    void testMeasure_ignoresStaticFields() {
 
         // Arrange
         class WithStatic {
@@ -140,7 +131,7 @@ public class TestMemoryPrimitivesObjects {
             static long s;
         }
 
-        PrimitivesObjectsMemoryMeasure measurer = new PrimitivesObjectsMemoryMeasure();
+        PrimitivesObjectsMemory measurer = new PrimitivesObjectsMemory();
         long expected = 4L;
 
         // Act
@@ -162,7 +153,7 @@ public class TestMemoryPrimitivesObjects {
      * - Fields declared in both subclass and superclass are counted.
      */
     @Test
-    void measure_includesSuperclassFields() {
+    void testMeasure_includesSuperclassFields() {
 
         // Arrange
         class Parent {
@@ -173,7 +164,7 @@ public class TestMemoryPrimitivesObjects {
             long c;
         }
 
-        PrimitivesObjectsMemoryMeasure measurer = new PrimitivesObjectsMemoryMeasure();
+        PrimitivesObjectsMemory measurer = new PrimitivesObjectsMemory();
         long expected = 4 + 8;
 
         // Act

@@ -1,4 +1,4 @@
-import org.internal.ReferencesMeasurer;
+import org.MemoryMeasure.MemoryMeasurer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,12 +20,11 @@ public class TestMemoryArray {
     void testPrimitiveArray_countsLengthTimes() throws Exception {
 
         //Arrange
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
         int[] arr = new int[5];
         long expected = 5L * 4;
 
         //Act
-        long actual = measurer.measure(arr);
+        long actual = MemoryMeasurer.measure(arr);
 
         //Assert
         assertEquals(expected, actual,
@@ -44,7 +43,7 @@ public class TestMemoryArray {
      * - Null elements do not contribute deep size.
      */
     @Test
-    void objectArray_countsSlotsAndDeep() throws Exception {
+    void testArray_countsSlotsAndDeep() throws Exception {
 
         //Arrange
         class A {
@@ -52,11 +51,10 @@ public class TestMemoryArray {
         }
 
         A[] arr = new A[]{new A(), null, new A()};
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
         long expected = 3L * 8 + 2L * 8;
 
         //Act
-        long actual = measurer.measure(arr);
+        long actual = MemoryMeasurer.measure(arr);
 
         //Assert
         assertEquals(expected, actual,
@@ -75,7 +73,7 @@ public class TestMemoryArray {
      * - No double-counting occurs due to visited tracking.
      */
     @Test
-    void arrayWithSameObject_notDoubleCounted() throws Exception {
+    void testArrayWithSameObject_notDoubleCounted() throws Exception {
 
         //Arrange
         class A {
@@ -84,11 +82,10 @@ public class TestMemoryArray {
 
         A obj = new A();
         A[] arr = new A[]{obj, obj};
-        ReferencesMeasurer measurer = new ReferencesMeasurer();
-        long expected = 2L * 8 + 8L;
+        long expected = 2 * 8 + 8L;
 
         //Act
-        long actual = measurer.measure(arr);
+        long actual = MemoryMeasurer.measure(arr);
 
         //Assert
         assertEquals(expected, actual,
